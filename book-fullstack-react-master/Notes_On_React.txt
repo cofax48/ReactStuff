@@ -1,0 +1,157 @@
+Symbols:
+
+var a = [
+  'item 1',
+  'item 2',
+  'item 3'
+];
+
+//old-school
+var a2 = a.map(function(s){ return s.length });
+
+//New-school
+var a3 = a.map( s => s.length );
+
+Chapter 1
+Data flows between child and parent-event is passed up from child and data flows down from parent
+We manage updates through state and pass data throughb Components with props
+ProductList featured products
+
+Chapter 2
+TimersDashboard: Parent Container (isOpen boolean (stateful-data is define here and changes over time))
+  -EditableTimerList: Displays a list of timer containers (Timer properties stateful-data is defined in component-changes over time-cannot be computed otherwise)
+    * EditableTimer: Displays either a timer or a timers edit form (editFormOpen for a given timer -stateful-data is defined in component and cant be compiuted otherwise)
+        Timer: Displays a given Timer
+        TimerForm: Displays a given timer's edit form
+  - ToggleableTimerForm: Displays a form to create a new Timer
+    * TimerForm (not displayed): Displays a new Timers create form
+
+
+//RecipeList should have Recipies
+
+Framework for developing React Apps
+1. Break App into Components
+2. Build a static verswion of the App
+3. Determine what should be stateful
+4. Determine in which component each piece of state should live
+5. Hard-code initial states
+6. Add inverse data flow
+7. Add Server communication
+
+Data will be wherever we are defining or using props-(basically $scope)
+TimersDashboard: Decalres 2 child components -sets one prop which isOpen(boolean) passed  down to ToggleableTimerForm
+  -EditableTimerList: Decalres 2 child components each with props corresponding to a given timer's properties
+    * EditableTimer: Uses prop editFormOpen
+      Timer: uses all the props for a timer
+      TimerForm: two interactive fields-title/project
+  - ToggleableTimerForm: Displays a form to create a new Timer
+    * TimerForm (not displayed): Displays a new Timers create form
+
+Not state:
+  Is it passed in from a parent via props-if so not state?
+  Is it static over time?
+  Can it be computed by other means?
+
+Stateful data:
+  The list of timers and properties of each timer
+  Whether or not the edit form of a timer is open
+  Whether or not the create form is open
+
+  For each piece of state:
+    identify every component that renders something based on that state.
+    Find a common owner component (a single component above all the components that need the state in the heirarchy)
+    Either the common owner or another component higher up in the hierarchy should own the state
+    If a proper component doesn't exist for holding state-make a new component to hold state-basically state should always be higher up in hioerarchy
+
+props are state's immutable accomplice: props act as state's one-way data pipeline, state is managed in select parent components and then that data flows through children as props
+
+
+In react forms are stateful
+
+Use onChange attribute for input elements-onChange is like scope.myFunction = myFunction(ng-model) {}
+
+Single responsibility principle-one function handles one thing and enables it to be called from elsewhere
+
+State object cannot be updated directly -we have to use setState
+
+When defining an action-go to html where action is add onClick-which triggers a function call-that function call should reside above the render within the class
+
+If i want to send an event action up the heieracrhy-send it with props
+
+A react component has at a minimum render() function which return a React element
+
+If i'm building a component with a lot of sub components like the list of timers-then app design simmilar to the timer app works,
+  -however If i'm building an app with a lot disparate features then I add the html tag on the index page and attach my react component to the tag
+
+Elements:
+
+render()-the one required function on every React Component- class YaDig extends React.Component {render()}
+
+props - the input parameters to our components
+  -props are immutable pieces of data that are passed into child parents from parent's components
+    -if the component is a function, props are the argument
+    -props are the parameters
+    -when we pass data to a component through an attribute it becomes available to the component through the this.props property-so:
+      <div>
+        <Header headerText="Hello World"/>
+      </div>
+
+      class Header extends React.Component {
+      render() {
+          return (
+          <h1>{this.props.headerText}</h1>
+          )}};
+
+      -The "Header" in the html references the Header class in react and the headerText is accesible as a referenced prop within the component of the same name
+        -This headerText however is immutable and cannot be changed
+          -Though iut can't be changed it can be used within the component or passed onto the component's children
+          -We can pass any JS object through props-even other react elements
+
+context - a global variable for our Components
+  -typically data is passed down through props, but is cumbersome for props that are required by many components withinn an app-context provides a way to pass down data without having to explicitly pass a prop through every level of the tree
+  -best reserved for logged-in user
+
+state - a way to hold data that is local to a component (that affects rendering)
+  -Where we hold data local to a component
+    -when data in state changes , component needs to be re-rendered
+    -state is private to a components and is mutable
+    -any time a component needs to hold onto to a dynamic piece of data, that component can be considered stateful
+
+Stateless components- a simplified way to write resuable components
+
+children- how to interact and manipulate child components
+
+statics- how to create class methods on our components
+
+Events:
+  Mounting-React invokes events only once
+  Updating-React can invoke events many times
+  Unmounting-React invokes events many times
+
+constructor()-Happens when an element is created and lets you set the default properties and the initial state, also happens prior to componentWillMount()
+
+Mounting:
+  componentWillMount() -Happens before mounting to the DOM -and will be in realDOM
+  componentDidMount() -Happens after mounting and rendering
+      --This is the reccomended place to put code to integrate with other front-end frameworks-libraries
+      -Where I want to make API requests
+
+Updating:
+  componentWillReceiveProps(nextProps)-Happens when the component is about to receive properties
+      --Useful if you want to capture the new property and set state accordingly before the render--set opacity state state based on isVisible(bool)-example
+  shouldComponentUpdate(nextProps, nextState)-> bool Lets you optimize the components rendering by determining when to update and when not to update
+  componentWillUpdate(nextProps, nextState)-Happens right before the component is updated
+      --dont use set state in this method
+      --if the component returns false then componetWillUpdate isnt invoked
+  componentDidUpdate(prevProps, prevState)-Happens right after the component Updated
+
+Unmounting:
+  componentWillUnmount() lets you unbind and detach any event listeners or do other cleanup work before the component is unmounted
+    --best for invalidating timers and setting other used variables to zero
+
+Forms:
+  onChange-------Fires when there's a change in any of the form's elements
+  onSubmit-------Fires when the form is submitted, usually by pressing enter
+
+PropTypes:
+  <script src="https://unpkg.com/prop-types/prop-types.min.js"></script>
